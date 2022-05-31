@@ -1,0 +1,23 @@
+{
+  "name": "teamsmanager",
+  "version": "1.0.0",
+  "description": "End of book project, TP from **TYPESCRIPT, NOTIONS FONDAMENTALES** Published by ENI, author: Felix BOILLON and Sylvain PONTOREAU.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.prod.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benaor/API_TeamsManager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benaor/API_TeamsManager/issues"
+  },
+  "homepage": "https://github.com/benaor/API_TeamsManager#readme",
+  "devDependencies": {
+    "typescript": "^4.7.2"
+  }
+}
