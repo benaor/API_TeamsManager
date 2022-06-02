@@ -17,11 +17,11 @@ interface ActionInformation {
 
 class RouteCollection {
   private controllerInformations: ControllerInformations[]
-  private actionInformation: ActionInformation[]
+  private actionInformations: ActionInformation[]
 
   constructor() {
     this.controllerInformations = []
-    this.actionInformation = []
+    this.actionInformations = []
   }
 
   registerController(ctor: new (...args: any[]) => any, prefix: string): void {
@@ -29,13 +29,13 @@ class RouteCollection {
   }
 
   registerAction(controllerName: string, methodName: string, httpVerb: HttpVerb, path?: string): void {
-    this.actionInformation.push({ controllerName, methodName, httpVerb, path: path || "" })
+    this.actionInformations.push({ controllerName, methodName, httpVerb, path: path || "" })
   }
 
   setupRouter(router: Router) {
     this.controllerInformations.forEach((c: ControllerInformations) => {
       const controller = new c.ctor()
-      const actions = this.actionInformation.filter((a: ActionInformation) => a.controllerName === c.controllerName)
+      const actions = this.actionInformations.filter((a: ActionInformation) => a.controllerName === c.controllerName)
 
       actions.forEach((a: ActionInformation) => {
         const action = controller[a.methodName].bind(controller)
