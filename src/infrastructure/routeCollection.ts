@@ -1,4 +1,5 @@
 import { Router } from "express"
+import { asyncMiddleware } from "./async-middleware"
 
 type HttpVerb = "get"
 
@@ -40,7 +41,7 @@ class RouteCollection {
       actions.forEach((a: ActionInformation) => {
         const action = controller[a.methodName].bind(controller)
         const route = `/${c.prefix}/${a.path}`
-        router[a.httpVerb](route, action)
+        router[a.httpVerb](route, asyncMiddleware(action))
       })
     })
   }
