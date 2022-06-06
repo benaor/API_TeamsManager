@@ -12,6 +12,26 @@ abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     this.queries = []
   }
 
+  abstract getParams(entity: T): any[]
+
+  async getAll(): Promise<T[]> {
+    const query = this.getQuery(QueryType.getAll)
+    await this.open()
+    const entities = await this.all(query)
+    await this.close()
+
+    return entities
+  }
+
+  async insert(entity: T): Promise<void> {
+    const query = this.getQuery(QueryType.Insert)
+    const parameters = this.getParams(entity)
+
+    await this.open()
+    await this.run(query, parameters)
+    await this.close()
+  }
+
   protected addQuery(type: QueryType, sql: string) {
     const hasQuery = this.queries.some((value) => value[0] === type)
 
@@ -27,8 +47,6 @@ abstract class AbstractRepository<T extends Entity> implements Repository<T> {
 
     return query[1]
   }
-
-  abstract getParams(entity: T): any[]
 
   protected open(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -60,13 +78,22 @@ abstract class AbstractRepository<T extends Entity> implements Repository<T> {
     })
   }
 
-  async getAll(): Promise<T[]> {
-    const query = this.getQuery(QueryType.getAll)
-    await this.open()
-    const entities = await this.all(query)
-    await this.close()
+  protected query(sql: string, params: any[]): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.database.get(sql, params, (err, row) => {
+        if (err) reject(err)
+        else resolve(row)
+      })
+    })
+  }
 
-    return entities
+  protected run(sql: string, params: any[]) {
+    return new Promise<void>((resolve, reject) => {
+      this.database.get(sql, params, (err, row) => {
+        if (err) reject(err)
+        else resolve(row)
+      })
+    })
   }
 }
 

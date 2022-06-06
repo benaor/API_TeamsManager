@@ -2,7 +2,7 @@ import { Keys } from "../keys"
 import { Inject } from "../decorators/inject"
 import { Request, Response } from "express"
 import { Controller } from "../decorators/controllers"
-import { get } from "../decorators/route"
+import { Get } from "../decorators/route"
 import { Repository } from "../models/repositories/repository"
 import { Employee } from "../models/types/employee"
 
@@ -17,7 +17,7 @@ class EmployeeController {
     this.employeeRepository = employeeRepository
   }
 
-  @get()
+  @Get()
   async getAll(req: Request, res: Response) {
     const employees = await this.employeeRepository.getAll()
     res.json(employees)

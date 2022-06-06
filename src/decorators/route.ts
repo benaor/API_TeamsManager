@@ -8,6 +8,7 @@ const action = (httpVerb: HttpVerb, path?: string) => {
   return decorator
 }
 
-const get = (path?: string) => action("get", path)
+const Get = (path?: string) => action("get", path)
+const Post = (path?: string) => action("post", path)
 
-export { get }
+export { Get, Post }
