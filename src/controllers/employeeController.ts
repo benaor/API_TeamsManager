@@ -1,7 +1,8 @@
+import { Keys } from "../keys"
+import { Inject } from "../decorators/inject"
 import { Request, Response } from "express"
 import { Controller } from "../decorators/controllers"
 import { get } from "../decorators/route"
-import { EmployeeRepository } from "../models/repositories/employeeRepository"
 import { Repository } from "../models/repositories/repository"
 import { Employee } from "../models/types/employee"
 
@@ -9,8 +10,11 @@ import { Employee } from "../models/types/employee"
 class EmployeeController {
   private readonly employeeRepository: Repository<Employee>
 
-  constructor() {
-    this.employeeRepository = new EmployeeRepository()
+  constructor(
+    @Inject(Keys.employeeRepository)
+    employeeRepository: Repository<Employee>
+  ) {
+    this.employeeRepository = employeeRepository
   }
 
   @get()
@@ -19,3 +23,5 @@ class EmployeeController {
     res.json(employees)
   }
 }
+
+export { EmployeeController }

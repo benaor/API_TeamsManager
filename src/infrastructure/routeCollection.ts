@@ -1,7 +1,7 @@
-import { Router } from "express"
 import { INJECTIONS_METADATA_KEY } from "../decorators/inject"
-import { asyncMiddleware } from "./async-middleware"
 import { dependencyService } from "./dependencyService"
+import { Router } from "express"
+import { asyncMiddleware } from "./async-middleware"
 
 type HttpVerb = "get"
 

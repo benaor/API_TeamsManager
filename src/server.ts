@@ -1,4 +1,5 @@
 import "reflect-metadata" // Always in first positition
+import "./models/repositories/employeeRepository"
 import express from "express"
 import { config } from "dotenv"
 import { routeCollection } from "./infrastructure/routeCollection"

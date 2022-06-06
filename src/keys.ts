@@ -1,5 +1,5 @@
-const keys = {
+const Keys = {
   employeeRepository: Symbol.for("EmployeeRepository")
 } as const
 
-export { keys }
+export { Keys }
