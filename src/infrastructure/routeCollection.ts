@@ -1,5 +1,7 @@
 import { Router } from "express"
+import { INJECTIONS_METADATA_KEY } from "../decorators/inject"
 import { asyncMiddleware } from "./async-middleware"
+import { dependencyService } from "./dependencyService"
 
 type HttpVerb = "get"
 
@@ -35,7 +37,17 @@ class RouteCollection {
 
   setupRouter(router: Router) {
     this.controllerInformations.forEach((c: ControllerInformations) => {
-      const controller = new c.ctor()
+      const injections = Reflect.getOwnMetadata(INJECTIONS_METADATA_KEY, c.ctor)
+
+      const dependencies: unknown[] = []
+      Object.keys(injections)
+        .map((k) => parseInt(k, 10))
+        .sort((a, b) => (a < b ? -1 : 1))
+        .forEach((key) => {
+          dependencies.push(dependencyService.resolve(injections[key]))
+        })
+
+      const controller = new c.ctor(...dependencies)
       const actions = this.actionInformations.filter((a: ActionInformation) => a.controllerName === c.controllerName)
 
       actions.forEach((a: ActionInformation) => {
