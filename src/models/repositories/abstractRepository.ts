@@ -79,7 +79,7 @@ abstract class AbstractRepository<T extends Entity> implements Repository<T> {
   }
 
   protected query(sql: string, params: any[]): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       this.database.get(sql, params, (err, row) => {
         if (err) reject(err)
         else resolve(row)
@@ -89,9 +89,9 @@ abstract class AbstractRepository<T extends Entity> implements Repository<T> {
 
   protected run(sql: string, params: any[]) {
     return new Promise<void>((resolve, reject) => {
-      this.database.get(sql, params, (err, row) => {
+      this.database.run(sql, params, (err) => {
         if (err) reject(err)
-        else resolve(row)
+        else resolve()
       })
     })
   }

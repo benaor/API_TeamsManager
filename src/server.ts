@@ -14,11 +14,11 @@ const app = express()
 const port = process.env.PORT || 3000
 const router = express.Router()
 
-routeCollection.setupRouter(router)
-
 app.use(router)
 app.use(bodyParser.json())
 app.use(morgan("dev"))
 app.use(cors())
+
+routeCollection.setupRouter(router)
 
 app.listen(port, () => console.log(`Application running on port ${port}`))

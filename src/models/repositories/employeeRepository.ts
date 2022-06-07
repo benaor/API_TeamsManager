@@ -6,12 +6,13 @@ import { QueryType } from "./queryType"
 import { Repository } from "./repository"
 
 interface EmployeeRepository extends Repository<Employee> {
-  exist(email: string): Promise<boolean>
+  exists(email: string): Promise<boolean>
 }
 @Dependency(Keys.employeeRepository)
 class EmployeeRepositoryImpl extends AbstractRepository<Employee> implements EmployeeRepository {
   constructor() {
     super()
+
     this.addQuery(
       QueryType.getAll,
       `
@@ -24,7 +25,7 @@ class EmployeeRepositoryImpl extends AbstractRepository<Employee> implements Emp
     FROM Employee as e
     LEFT OUTER JOIN Team as t on e.TeamId = t.Id
     `
-    )
+    );
 
     this.addQuery(
       QueryType.Insert,
@@ -46,7 +47,7 @@ class EmployeeRepositoryImpl extends AbstractRepository<Employee> implements Emp
     return [entity.firstName, entity.lastName, entity.email, entity.teamId || undefined]
   }
 
-  async exist(email: string): Promise<boolean> {
+  async exists(email: string): Promise<boolean> {
     const query = `SELECT COUNT(*) as nb FROM Employee WHERE Email = ?`
 
     await this.open()
