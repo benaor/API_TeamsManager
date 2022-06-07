@@ -10,5 +10,6 @@ const action = (httpVerb: HttpVerb, path?: string) => {
 
 const Get = (path?: string) => action("get", path)
 const Post = (path?: string) => action("post", path)
+const Patch = (path?: string) => action("patch", path)
 
-export { Get, Post }
+export { Get, Post, Patch }

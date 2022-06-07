@@ -1,20 +1,25 @@
+import { Request, Response } from "express"
 import { Inject } from "../decorators/inject"
 import { Keys } from "../keys"
 import { Controller } from "../decorators/controllers"
-import { Get, Post } from "../decorators/route"
+import { Get, Post, Patch } from "../decorators/route"
 import { EmployeeRepository } from "../models/repositories/employeeRepository"
+import { TeamRepository } from "../models/repositories/teamRepository"
 import { Employee } from "../models/types/employee"
-import { Request, Response } from "express"
 
 @Controller()
 class EmployeeController {
   private readonly employeeRepository: EmployeeRepository
+  private readonly teamRepository: TeamRepository
 
   constructor(
     @Inject(Keys.employeeRepository)
-    employeeRepository: EmployeeRepository
+    employeeRepository: EmployeeRepository,
+    @Inject(Keys.teamRepository)
+    teamRepository: TeamRepository
   ) {
     this.employeeRepository = employeeRepository
+    this.teamRepository = teamRepository
   }
 
   @Get()
@@ -25,11 +30,13 @@ class EmployeeController {
 
   @Post()
   async post(req: Request, res: Response) {
-    if (this.isEmployee(req.body)) {
-      if (this.isValid(req.body)) {
-        const exist = await this.employeeRepository.exists(req.body.email)
+    const { body } = req
+    console.log(body)
+    if (this.isEmployee(body)) {
+      if (this.isValid(body)) {
+        const exist = await this.employeeRepository.exists(body.email)
         if (!exist) {
-          await this.employeeRepository.insert(req.body)
+          await this.employeeRepository.insert(body)
           res.sendStatus(200)
         } else {
           res.status(400).json({
@@ -48,6 +55,20 @@ class EmployeeController {
     }
   }
 
+  @Patch(":employeeId/team/:teamId")
+  async changeTeam(req: Request, res: Response) {
+    const { employeeId, teamId } = req.params
+
+    if (this.isIdentifier(employeeId) && this.isIdentifier(teamId)) {
+      const exist = await this.teamRepository.exists(parseInt(teamId))
+
+      if (exist) {
+        await this.employeeRepository.changeTeam(parseInt(employeeId), parseInt(teamId))
+        res.sendStatus(200)
+      } else res.status(400).json({ message: "Team doesn't exist" })
+    } else res.status(400).json({ message: "Invalid Identifier" })
+  }
+
   private isEmployee(value: any): value is Employee {
     return value.firstName && value.lastName && value.email
   }
@@ -58,6 +79,10 @@ class EmployeeController {
       employee.lastName.length &&
       /^[0-9a-z._-]+@{1}[0-9a-z._-]{2,}[.]{1}[a-z]{2,5}$/.test(employee.email)
     )
+  }
+
+  private isIdentifier(value: string) {
+    return /^\d+$/.test(value)
   }
 }
 

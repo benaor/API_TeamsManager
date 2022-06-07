@@ -7,6 +7,7 @@ import { Repository } from "./repository"
 
 interface EmployeeRepository extends Repository<Employee> {
   exists(email: string): Promise<boolean>
+  changeTeam(employeeId: number, teamId: number): Promise<void>
 }
 @Dependency(Keys.employeeRepository)
 class EmployeeRepositoryImpl extends AbstractRepository<Employee> implements EmployeeRepository {
@@ -25,7 +26,7 @@ class EmployeeRepositoryImpl extends AbstractRepository<Employee> implements Emp
     FROM Employee as e
     LEFT OUTER JOIN Team as t on e.TeamId = t.Id
     `
-    );
+    )
 
     this.addQuery(
       QueryType.Insert,
@@ -54,6 +55,13 @@ class EmployeeRepositoryImpl extends AbstractRepository<Employee> implements Emp
     const row = await this.query(query, [email])
     await this.close()
     return row.nb > 0
+  }
+
+  async changeTeam(employeeId: number, teamId: number): Promise<void> {
+    const query = `UPDATE Employee SET TeamId = ? WHERE Id = ?`
+    await this.open()
+    await this.run(query, [teamId, employeeId])
+    await this.close()
   }
 }
 

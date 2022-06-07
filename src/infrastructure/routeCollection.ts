@@ -3,7 +3,7 @@ import { dependencyService } from "./dependencyService"
 import { Router } from "express"
 import { asyncMiddleware } from "./async-middleware"
 
-type HttpVerb = "get" | "post"
+type HttpVerb = "get" | "post" | "patch"
 
 interface ControllerInformations {
   controllerName: string
