@@ -1,9 +1,11 @@
 import "reflect-metadata" // Always in first positition
+import "./models/repositories/teamRepository"
 import "./models/repositories/employeeRepository"
+import "./controllers/teamController"
+import "./controllers/employeeController"
+import { routeCollection } from "./infrastructure/routeCollection"
 import express from "express"
 import { config } from "dotenv"
-import { routeCollection } from "./infrastructure/routeCollection"
-import "./controllers/employeeController"
 import bodyParser from "body-parser"
 import morgan from "morgan"
 import cors from "cors"
